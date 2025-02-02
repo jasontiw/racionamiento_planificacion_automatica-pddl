@@ -91,6 +91,13 @@
        )
 
        ;Moverse, consume 1 de energia
+       ; ----- Precondiciones relacionadas a la bateria:
+       ; Se comprueba que exista una bateria en el rover
+       ; Se comprueba que la bateria tiene disponible un nivel anterior de carga
+       ; Se comprueba que la bateria se encuentra en un nivel especifico de carga
+       ; ----- Efectos:
+       ; El nivel de carga de bateria se cambia por el estado de carga de bateria anterior
+       ; Se niega el nivel de carga que tenia la bateria previamente 
        (:action navigate
               :parameters (?x - rover ?y - waypoint ?z - waypoint ?b - battery ?v1 ?v2 - batterylevel)
               :precondition (and 
@@ -193,6 +200,17 @@
        )
 
        ;valida rover en lander y niega battery level para setear nuevo battery level
+       ; ----- Precondiciones:
+       ; El rover esta en un waypoint especifico
+       ; Ese waypoint es el lander
+       ; La bateria esta a bordo del rover
+       ; La bateria esta en un nivel especifico de carga
+       ; ----- Efectos:
+       ; Se niega el nivel actual de carga de la bateria
+       ; Se modifica el nivel de carga de la bateria
+       ; ----- NOTA:
+       ; No se esta evaluando el nivel anterior de carga de bateria porque como se esta recargando
+       ; el nivel de carga puede saltar de 0 al valor maximo definido en el problema.
        (:action charge_battery
               :parameters (?r - rover ?x - waypoint ?l - lander ?b - battery ?v1 ?v2 - batterylevel)
               :precondition (and 
