@@ -80,18 +80,30 @@
               (channel_free ?l - lander)
               ; El canal de comunicacion del lander l esta libre.
 
-              (on_board ?b - battery ?r - rover)
+              (on_board_battery ?b - battery ?r - rover)
               ; Un rover puede tener bateria a bordo.
 
-              (at_charge ?b - battery ?v - batterylevel)
-              ; Una bateria con carga charge_level.
+              (has_battery_left ?v - batterylevel ?w - batterylevel )
+              ; El nivel de bateria tiene un nivel anterior
+
+              (at_battery_level ?b - battery ?v - batterylevel)
+              ; Una bateria en nivel de carga v
        )
 
-       ;Moverse
+       ;Moverse, consume 1 de energia
        (:action navigate
-              :parameters (?x - rover ?y - waypoint ?z - waypoint)
-              :precondition (and (can_traverse ?x ?y ?z) (available ?x) (at ?x ?y) (visible ?y ?z))
-              :effect (and (not (at ?x ?y)) (at ?x ?z))
+              :parameters (?x - rover ?y - waypoint ?z - waypoint ?b - battery ?v1 ?v2 - batterylevel)
+              :precondition (and 
+                     (can_traverse ?x ?y ?z) (available ?x) (at ?x ?y) (visible ?y ?z)
+                     (on_board_battery ?b ?x)
+                     (has_battery_left ?v1 ?v2)
+                     (at_battery_level ?b ?v2)
+              )
+              :effect (and 
+                     (not (at ?x ?y)) (at ?x ?z)
+                     (at_battery_level ?b ?v1)
+                     (not (at_battery_level ?b ?v2))
+              )
        )
        
        ;Obtener muestra de suelo
@@ -180,24 +192,16 @@
               )
        )
 
-       ;Esta bateria se va agotando cada vez que se hace una accion de movimientos - niega battery level para setear nuevo battery level (descargar)
-       (:action discharge_battery_level
-              :parameters (?r - rover ?b - battery ?v - batterylevel)
-              :precondition (and (at ?r ?x)
-                     (at_lander ?l ?y)(have_image ?r ?o ?m)(visible ?x ?y)(available ?r)(channel_free ?l)
-              )
-              :effect (and (not ((at_charge ?b - battery ?v - batterylevel)))
-                    ((at_charge ?b - battery ?t - batterylevel))
-              )
-       )
-
        ;valida rover en lander y niega battery level para setear nuevo battery level
        (:action charge_battery
-              :parameters (?r - rover ?x - waypoint ?l - lander ?b - battery ?v - batterylevel ?t - batterylevel)
-              :precondition (and (at ?r ?x) (at_lander ?l ?x)(available ?r)
+              :parameters (?r - rover ?x - waypoint ?l - lander ?b - battery ?v1 ?v2 - batterylevel)
+              :precondition (and 
+                     (at ?r ?x) (at_lander ?l ?x) (available ?r)
+                     (on_board_battery ?b ?r) (at_battery_level ?b ?v1)
               )
-              :effect (and (not ((at_charge ?b - battery ?v - batterylevel)))
-                    ((at_charge ?b - battery ?t - batterylevel))
+              :effect (and 
+                     (not (at_battery_level ?b ?v1))
+                     (at_battery_level ?b ?v2)
               )
        )
 

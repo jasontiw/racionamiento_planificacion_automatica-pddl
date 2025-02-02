@@ -8,7 +8,7 @@
 	camera0 - Camera
 	objective0 objective1 - Objective
 	battery0 - Battery
-    batterylevel1 batterylevel2 batterylevel3 batterylevel4 batterylevel5 - Batterylevel
+    batterylevel0 batterylevel1 batterylevel2 batterylevel3 batterylevel4 - Batterylevel
 	)
 (:init
 	(visible waypoint1 waypoint0)
@@ -56,11 +56,19 @@
 	(visible_from objective1 waypoint1)
 	(visible_from objective1 waypoint2)
 	(visible_from objective1 waypoint3)
+	(on_board_battery battery0 rover0)
+	(at_battery_level battery0 batterylevel2)
+	(has_battery_left batterylevel3 batterylevel4)
+	(has_battery_left batterylevel2 batterylevel3)
+	(has_battery_left batterylevel1 batterylevel2)
+	(has_battery_left batterylevel0 batterylevel1)
 )
 
 (:goal (and
 (communicated_soil_data waypoint2)
 (communicated_rock_data waypoint3)
+(communicated_rock_data waypoint1)
+(communicated_soil_data waypoint0)
 (communicated_image_data objective1 high_res)
 	)
 )
