@@ -7,6 +7,7 @@
 	waypoint0 waypoint1 waypoint2 waypoint3 waypoint4 - Waypoint
 	camera0 camera1 - Camera
 	objective0 objective1 objective2 - Objective
+	; Objetos relacionados a la funcionalidad de bateria
 	battery0 battery1 - Battery
     batterylevel0 batterylevel1 batterylevel2 batterylevel3 batterylevel4 batterylevel5 batterylevel6 - Batterylevel
 	)
@@ -74,25 +75,30 @@
 	(visible_from objective1 waypoint2)
 	(visible_from objective1 waypoint3)
     (visible_from objective2 waypoint4)
+	; Estados anteriores de carga de bateria
 	(has_battery_left batterylevel5 batterylevel6)
 	(has_battery_left batterylevel4 batterylevel5)
 	(has_battery_left batterylevel3 batterylevel4)
 	(has_battery_left batterylevel2 batterylevel3)
 	(has_battery_left batterylevel1 batterylevel2)
 	(has_battery_left batterylevel0 batterylevel1)
+	; Pone una bateria en un rover
 	(on_board_battery battery0 rover0)
 	(on_board_battery battery1 rover1)
-	(at_battery_level battery0 batterylevel5)
-	(at_battery_level battery1 batterylevel5)
+	; Se configura carga inicial en las baterias
+	(at_battery_level battery0 batterylevel6)
+	(at_battery_level battery1 batterylevel6)
 )
 
+; Para visualizar mejor el funcionamiento de baterias, se coloca un nuevo objetivo
+; Este objetivo es que la bateria del primer rover se recarge para una posible nueva mision
 (:goal (and
 			(communicated_soil_data waypoint2)
 			(communicated_rock_data waypoint3)
 			(communicated_image_data objective1 high_res)
 			(communicated_image_data objective2 high_res)
 			(communicated_image_data objective2 colour)
-			(at_battery_level battery0 batterylevel5)
+			(at_battery_level battery0 batterylevel6)
 		)
 	)
 )
