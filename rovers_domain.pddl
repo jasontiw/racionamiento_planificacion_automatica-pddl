@@ -30,7 +30,7 @@
 
 )
 
-	
+;Moverse
 (:action navigate
 :parameters (?x - rover ?y - waypoint ?z - waypoint) 
 :precondition (and (can_traverse ?x ?y ?z) (available ?x) (at ?x ?y) 
@@ -40,6 +40,7 @@
 		)
 )
 
+;Obtener muestra de suelo
 (:action sample_soil
 :parameters (?x - rover ?s - store ?p - waypoint)
 :precondition (and (at ?x ?p) (at_soil_sample ?p) (equipped_for_soil_analysis ?x) (store_of ?s ?x) (empty ?s)
@@ -48,6 +49,7 @@
 		)
 )
 
+;Obtener muestra de roca
 (:action sample_rock
 :parameters (?x - rover ?s - store ?p - waypoint)
 :precondition (and (at ?x ?p) (at_rock_sample ?p) (equipped_for_rock_analysis ?x) (store_of ?s ?x)(empty ?s)
@@ -56,6 +58,7 @@
 		)
 )
 
+;Soltar (suelta lo que tiene guardado)
 (:action drop
 :parameters (?x - rover ?y - store)
 :precondition (and (store_of ?y ?x) (full ?y)
@@ -64,6 +67,7 @@
 	)
 )
 
+;Calibrar revisa si el rover tiene camara y el objetivo a fotografiar es visible
 (:action calibrate
  :parameters (?r - rover ?i - camera ?t - objective ?w - waypoint)
  :precondition (and (equipped_for_imaging ?r) (calibration_target ?i ?t) (at ?r ?w) (visible_from ?t ?w)(on_board ?i ?r)
@@ -73,7 +77,7 @@
 
 
 
-
+;Toma foto (necesita estar calibrado)
 (:action take_image
  :parameters (?r - rover ?p - waypoint ?o - objective ?i - camera ?m - mode)
  :precondition (and (calibrated ?i ?r)
@@ -87,7 +91,7 @@
 		)
 )
 
-
+;comunica data del suelo (necesita haber agarrado suelo)
 (:action communicate_soil_data
  :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
  :precondition (and (at ?r ?x)(at_lander ?l ?y)(have_soil_analysis ?r ?p) 
@@ -98,6 +102,7 @@
 	)
 )
 
+;comunica data de roca (necesita haber agarrado roca)
 (:action communicate_rock_data
  :parameters (?r - rover ?l - lander ?p - waypoint ?x - waypoint ?y - waypoint)
  :precondition (and (at ?r ?x)(at_lander ?l ?y)(have_rock_analysis ?r ?p)
@@ -107,7 +112,7 @@
           )
 )
 
-
+;comunica data de imagen (necesita haber tomado foto)
 (:action communicate_image_data
  :parameters (?r - rover ?l - lander ?o - objective ?m - mode ?x - waypoint ?y - waypoint)
  :precondition (and (at ?r ?x)(at_lander ?l ?y)(have_image ?r ?o ?m)(visible ?x ?y)(available ?r)(channel_free ?l)
